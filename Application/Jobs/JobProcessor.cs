@@ -3,14 +3,10 @@ using WebAPI.Domain.Jobs;
 
 namespace WebAPI.Application.Jobs; 
 
-public sealed class JobProcessor : BackgroundService {
-    private readonly IJobQueue _jobQueue;
-    private readonly ILogger<JobProcessor> _logger;
-
-    public JobProcessor(IJobQueue jobQueue, ILogger<JobProcessor> logger) {
-        _jobQueue = jobQueue;
-        _logger = logger;
-    }
+public sealed class JobProcessor(IJobQueue jobQueue, IJobStore jobStore, ILogger<JobProcessor> logger) : BackgroundService {
+    private readonly IJobQueue _jobQueue = jobQueue;
+    private readonly IJobStore _jobStore = jobStore;
+    private readonly ILogger<JobProcessor> _logger = logger;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         _logger.LogInformation("Job processor started.");
@@ -33,16 +29,19 @@ public sealed class JobProcessor : BackgroundService {
                 try {
                     job.State = JobState.Running;
                     job.StartedAt = DateTimeOffset.UtcNow;
+                    _jobStore.Update(job);
                     _logger.LogInformation("Processing job {JobType}", job.JobType);
 
                     await ProcessJobAsync(job, stoppingToken);
 
                     job.State = JobState.Completed;
                     job.FinishedAt = DateTimeOffset.UtcNow;
+                    _jobStore.Update(job);
                     _logger.LogInformation("Job completed successfully.");
                 } catch (Exception ex) {
                     job.State = JobState.Failed;
                     job.FinishedAt = DateTimeOffset.UtcNow;
+                    _jobStore.Update(job);
                     _logger.LogError(ex, "Job entered state {JobState}", job.State);
                 }
             }

@@ -7,16 +7,12 @@ namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("jobs")]
-public sealed class JobsController : ControllerBase {
+public sealed class JobsController(IJobQueue queue, IJobStore store, ILogger<JobsController> logger) : ControllerBase {
     private const string CorrelationHeader = "X-Correlation-Id";
 
-    private readonly IJobQueue _queue;
-    private readonly ILogger<JobsController> _logger;
-
-    public JobsController(IJobQueue queue, ILogger<JobsController> logger) {
-        _queue = queue;
-        _logger = logger;
-    }
+    private readonly IJobQueue _queue = queue;
+    private readonly IJobStore _store = store;
+    private readonly ILogger<JobsController> _logger = logger;
 
     [HttpPost]
     public ActionResult<CreateJobResponse> CreateJob(
@@ -31,16 +27,30 @@ public sealed class JobsController : ControllerBase {
             State = JobState.Pending
         };
 
+        _store.Add(job);
         _queue.Enqueue(job);
 
-        _logger.LogInformation(
-                    "Job {JobId} enqueued with state {State}",
-                    job.Id,
-                    job.State);
+        _logger.LogInformation("Job {JobId} created", job.Id);
 
         return Accepted(new CreateJobResponse {
             JobId = job.Id,
             State = job.State
+        });
+    }
+
+    [HttpGet("{id:guid}")]
+    public ActionResult<JobStatusResponse> GetJobStatus(Guid id) {
+        var job = _store.Get(id);
+
+        if (job is null)
+            return NotFound();
+
+        return Ok(new JobStatusResponse {
+            JobId= job.Id,
+            State= job.State,
+            CreatedAt = job.CreatedAt,
+            StartedAt = job.StartedAt,
+            FinishedAt = job.FinishedAt
         });
     }
 }

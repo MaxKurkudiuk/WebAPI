@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Serilog;
-using WebAPI.Infrastructure.Middleware;
 using WebAPI.Application.Interfaces;
 using WebAPI.Application.Jobs;
+using WebAPI.Infrastructure.Middleware;
+using WebAPI.Infrastructure.Persistence;
 using WebAPI.Infrastructure.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,8 @@ static void ConfigureBuilder(WebApplicationBuilder builder) {
     builder.Services.AddControllers();
 
     builder.Services.AddSingleton<IJobQueue, InMemoryJobQueue>();
+    builder.Services.AddSingleton<IJobStore, InMemoryJobStore>();
+
     builder.Services.AddHostedService<JobProcessor>();
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
