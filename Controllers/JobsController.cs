@@ -27,20 +27,20 @@ public sealed class JobsController : ControllerBase {
         var job = new Job {
             JobType = request.JobType,
             Parameters = request.Parameters,
-            CorrelationId = correlationId
+            CorrelationId = correlationId,
+            State = JobState.Pending
         };
 
         _queue.Enqueue(job);
 
         _logger.LogInformation(
-                    "Job {JobId} enqueued with CorrelationId {CorrelationId}",
+                    "Job {JobId} enqueued with state {State}",
                     job.Id,
-                    correlationId);
+                    job.State);
 
         return Accepted(new CreateJobResponse {
             JobId = job.Id,
-            Status = "Queued"
+            State = job.State
         });
     }
 }
-

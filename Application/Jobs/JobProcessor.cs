@@ -31,16 +31,19 @@ public sealed class JobProcessor : BackgroundService {
                 ["CorrelationId"] = job.CorrelationId ?? "N/A"
             })) {
                 try {
-                    job.Status = "Running";
+                    job.State = JobState.Running;
+                    job.StartedAt = DateTimeOffset.UtcNow;
                     _logger.LogInformation("Processing job {JobType}", job.JobType);
 
                     await ProcessJobAsync(job, stoppingToken);
 
-                    job.Status = "Completed";
+                    job.State = JobState.Completed;
+                    job.FinishedAt = DateTimeOffset.UtcNow;
                     _logger.LogInformation("Job completed successfully.");
                 } catch (Exception ex) {
-                    job.Status = "Failed";
-                    _logger.LogError(ex, "Job processing failed.");
+                    job.State = JobState.Failed;
+                    job.FinishedAt = DateTimeOffset.UtcNow;
+                    _logger.LogError(ex, "Job entered state {JobState}", job.State);
                 }
             }
         }
