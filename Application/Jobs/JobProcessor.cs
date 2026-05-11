@@ -1,7 +1,7 @@
-﻿using WebAPI_01.Application.Interfaces;
-using WebAPI_01.Domain.Jobs;
+﻿using WebAPI.Application.Interfaces;
+using WebAPI.Domain.Jobs;
 
-namespace WebAPI_01.Application.Jobs; 
+namespace WebAPI.Application.Jobs; 
 
 public sealed class JobProcessor : BackgroundService {
     private readonly IJobQueue _jobQueue;

@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Dtos; 
+﻿namespace WebAPI.Dtos; 
 
 public sealed class CreateJobRequest {
     public string JobType { get; init; } = default!;

@@ -1,6 +1,6 @@
-﻿using WebAPI_01.Domain.Jobs;
+﻿using WebAPI.Domain.Jobs;
 
-namespace WebAPI_01.Application.Interfaces; 
+namespace WebAPI.Application.Interfaces; 
 
 public interface IJobQueue {
     void Enqueue(Job job);

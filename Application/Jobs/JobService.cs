@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Application.Jobs {
+﻿namespace WebAPI.Application.Jobs {
     public class JobService {
     }
 }

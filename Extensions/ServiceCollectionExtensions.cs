@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Extensions {
+﻿namespace WebAPI.Extensions {
     public class ServiceCollectionExtensions {
     }
 }

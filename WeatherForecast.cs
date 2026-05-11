@@ -1,4 +1,4 @@
-namespace WebAPI_01 {
+namespace WebAPI {
     public class WeatherForecast {
         public DateOnly Date { get; set; }
 

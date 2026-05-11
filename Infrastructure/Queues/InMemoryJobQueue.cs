@@ -1,8 +1,8 @@
 ﻿using System.Threading.Channels;
-using WebAPI_01.Application.Interfaces;
-using WebAPI_01.Domain.Jobs;
+using WebAPI.Application.Interfaces;
+using WebAPI.Domain.Jobs;
 
-namespace WebAPI_01.Infrastructure.Queues; 
+namespace WebAPI.Infrastructure.Queues; 
 
 public sealed class InMemoryJobQueue : IJobQueue {
     private readonly Channel<Job> _queue = Channel.CreateUnbounded<Job>();

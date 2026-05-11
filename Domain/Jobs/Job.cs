@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Domain.Jobs; 
+﻿namespace WebAPI.Domain.Jobs; 
 
 public sealed class Job {
     public Guid Id { get; init; } = Guid.NewGuid();

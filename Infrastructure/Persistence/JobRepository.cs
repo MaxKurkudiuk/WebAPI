@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Infrastructure.Persistence {
+﻿namespace WebAPI.Infrastructure.Persistence {
     public class JobRepository {
     }
 }

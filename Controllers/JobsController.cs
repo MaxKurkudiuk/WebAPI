@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebAPI_01.Application.Interfaces;
-using WebAPI_01.Domain.Jobs;
-using WebAPI_01.Dtos;
+using WebAPI.Application.Interfaces;
+using WebAPI.Domain.Jobs;
+using WebAPI.Dtos;
 
-namespace WebAPI_01.Controllers;
+namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("jobs")]

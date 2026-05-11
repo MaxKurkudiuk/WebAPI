@@ -1,4 +1,4 @@
-﻿namespace WebAPI_01.Dtos; 
+﻿namespace WebAPI.Dtos; 
 
 public sealed class CreateJobResponse {
     public Guid JobId { get; init; }

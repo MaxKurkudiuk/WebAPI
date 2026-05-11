@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPI_01.Controllers {
+namespace WebAPI.Controllers {
     [Authorize]
     [ApiController]
     [Route("[controller]")]
