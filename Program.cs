@@ -6,13 +6,11 @@ using WebAPI.Application.Jobs;
 using WebAPI.Infrastructure.Queues;
 
 var builder = WebApplication.CreateBuilder(args);
-
 ConfigureBuilder(builder);
 
 var app = builder.Build();
 
 ConfigureApp(app);
-
 app.Run();
 
 static void ConfigureBuilder(WebApplicationBuilder builder) {
@@ -26,6 +24,11 @@ static void ConfigureBuilder(WebApplicationBuilder builder) {
         .CreateLogger();
 
     builder.Host.UseSerilog();
+
+    // ASP.NET Core Health Checks part 1
+    //builder.Services.AddHealthChecks();
+    //builder.AddSqlServer(connectionString);
+    //builder.AddAzureServiceBusQueue(...);
 
     // Add services to the container.
     builder.Services.AddControllers();
@@ -50,6 +53,10 @@ static void ConfigureApp(WebApplication app) {
     if (app.Environment.IsDevelopment()) {
         app.MapOpenApi();
     }
+
+    // ASP.NET Core Health Checks part 2
+    //app.MapHealthChecks("/health");
+
     app.UseMiddleware<CorrelationIdMiddleware>();
 
     app.UseHttpsRedirection();
