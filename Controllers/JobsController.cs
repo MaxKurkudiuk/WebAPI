@@ -8,6 +8,8 @@ namespace WebAPI_01.Controllers;
 [ApiController]
 [Route("jobs")]
 public sealed class JobsController : ControllerBase {
+    private const string CorrelationHeader = "X-Correlation-Id";
+
     private readonly IJobQueue _queue;
     private readonly ILogger<JobsController> _logger;
 
@@ -19,14 +21,21 @@ public sealed class JobsController : ControllerBase {
     [HttpPost]
     public ActionResult<CreateJobResponse> CreateJob(
         [FromBody] CreateJobRequest request) {
+
+        var correlationId = HttpContext.Items[CorrelationHeader]?.ToString();
+
         var job = new Job {
             JobType = request.JobType,
-            Parameters = request.Parameters
+            Parameters = request.Parameters,
+            CorrelationId = correlationId
         };
 
         _queue.Enqueue(job);
 
-        _logger.LogInformation("Job {JobId} enqueued.", job.Id);
+        _logger.LogInformation(
+                    "Job {JobId} enqueued with CorrelationId {CorrelationId}",
+                    job.Id,
+                    correlationId);
 
         return Accepted(new CreateJobResponse {
             JobId = job.Id,

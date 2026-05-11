@@ -26,15 +26,14 @@ public sealed class JobProcessor : BackgroundService {
                 break;
             }
 
-
             using (_logger.BeginScope(new Dictionary<string, object> {
-                ["JobId"] = job.Id
+                ["JobId"] = job.Id,
+                ["CorrelationId"] = job.CorrelationId ?? "N/A"
             })) {
                 try {
                     job.Status = "Running";
                     _logger.LogInformation("Processing job {JobType}", job.JobType);
 
-                    // Simulate job processing (Excel, Graph, APIs, etc.)
                     await ProcessJobAsync(job, stoppingToken);
 
                     job.Status = "Completed";

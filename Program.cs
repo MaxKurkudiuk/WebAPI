@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using WebAPI.Infrastructure.Middleware;
 using WebAPI_01.Application.Interfaces;
 using WebAPI_01.Application.Jobs;
 using WebAPI_01.Infrastructure.Queues;
@@ -28,6 +29,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
     app.MapOpenApi();
 }
+app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.UseHttpsRedirection();
 
