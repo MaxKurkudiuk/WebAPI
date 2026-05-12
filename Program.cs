@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.Negotiate;
 using Serilog;
 using WebAPI.Application.Interfaces;
 using WebAPI.Application.Jobs;
+using WebAPI.Application.Jobs.Processing;
 using WebAPI.Infrastructure.Middleware;
 using WebAPI.Infrastructure.Persistence;
 using WebAPI.Infrastructure.Queues;
@@ -38,6 +39,10 @@ static void ConfigureBuilder(WebApplicationBuilder builder) {
     builder.Services.AddSingleton<IJobStore, InMemoryJobStore>();
 
     builder.Services.AddHostedService<JobProcessor>();
+
+    builder.Services.AddSingleton<IFileProcessor, CsvFileProcessor>();
+    builder.Services.AddSingleton<IFileProcessor, ExcelFileProcessor>();
+
 
     // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
     builder.Services.AddOpenApi();
