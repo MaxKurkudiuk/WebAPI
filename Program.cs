@@ -3,6 +3,7 @@ using Serilog;
 using WebAPI.Application.Interfaces;
 using WebAPI.Application.Jobs;
 using WebAPI.Application.Jobs.Processing;
+using WebAPI.Application.Jobs.Processing.Validation;
 using WebAPI.Infrastructure.Middleware;
 using WebAPI.Infrastructure.Persistence;
 using WebAPI.Infrastructure.Queues;
@@ -34,6 +35,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder) {
 
     // Add services to the container.
     builder.Services.AddControllers();
+    ConfigureFileValidationRules(builder);
 
     builder.Services.AddSingleton<IJobQueue, InMemoryJobQueue>();
     builder.Services.AddSingleton<IJobStore, InMemoryJobStore>();
@@ -72,4 +74,11 @@ static void ConfigureApp(WebApplication app) {
     app.UseAuthorization();
 
     app.MapControllers();
+}
+
+static void ConfigureFileValidationRules(WebApplicationBuilder builder) {
+    builder.Services.AddSingleton<IRowValidator>(new RequiredFieldValidator("InvoiceNumber"));
+    builder.Services.AddSingleton<IRowValidator>(new NumericRangeValidator("Amount", 0.01m));
+    builder.Services.AddSingleton<IRowValidator>(new DateValidator("InvoiceDate"));
+    builder.Services.AddSingleton<RowValidationEngine>();
 }

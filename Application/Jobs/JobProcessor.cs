@@ -59,7 +59,7 @@ public sealed class JobProcessor(
 
     private async Task ProcessJobAsync(Job job, CancellationToken stoppingToken) {
 
-        var filePath = job.Parameters["filePath"];
+        var filePath = job.Parameters["FilePath"];
 
         var processor = _processors
             .FirstOrDefault(p => p.CanProcess(filePath));
